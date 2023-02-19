@@ -1,21 +1,19 @@
-import { useCallback } from "react"
-import { useDropzone } from "react-dropzone"
+import { useCallback } from "react";
+import { useDropzone } from "react-dropzone";
 
 export const Dropzone = () => {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     // Do something with the files
-    console.log(acceptedFiles)
-  }, [])
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+    console.log(acceptedFiles);
+  }, []);
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
-    <div {...getRootProps()}>
+    <div className=" cursor-pointer hover:bg-gray-100" {...getRootProps()}>
       <input {...getInputProps()} />
-      {
-        isDragActive ?
-          <p>Drop the files here ...</p> :
-          <p>Drag 'n' drop some files here, or click to select files</p>
-      }
+      {isDragActive
+        ? <p>Drop the files here ...</p>
+        : <p>Drag 'n' drop some files here, or click to select files</p>}
     </div>
-  )
-}
+  );
+};

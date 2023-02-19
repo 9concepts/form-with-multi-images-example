@@ -30,54 +30,89 @@ export const PostForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Dropzone />
-      <label style={{ display: "block" }}>
-        画像
-        <input
-          type="file"
-          accept="image/*"
-          {...register("images", {
-            required: "必須です。",
-          })}
-          multiple
-        />
-        {errors.images && (
-          <p style={{ color: "tomato" }}>{errors.images.message}</p>
-        )}
-      </label>
-      <label style={{ display: "block" }}>
-        タイトル
-        <input
-          {...register("title", {
-            required: "必須です。",
-            maxLength: {
-              value: MAX_TITLE_LENGTH,
-              message: `${MAX_TITLE_LENGTH}文字以内で入力してください。`,
-            },
-          })}
-        />
-        {errors.title && (
-          <p style={{ color: "tomato" }}>{errors.title.message}</p>
-        )}
-      </label>
-      <label style={{ display: "block" }}>
-        説明
-        <textarea
-          {...register("description", {
-            required: "必須です。",
-            maxLength: {
-              value: MAX_DESCRIPTION_LENGTH,
-              message: `${MAX_DESCRIPTION_LENGTH}文字以内で入力してください。`,
-            },
-          })}
-        />
-        {errors.description && (
-          <p style={{ color: "tomato" }}>{errors.description.message}</p>
-        )}
-      </label>
+    <form
+      className="w-full max-w-lg p-4 border-gray-900 border rounded"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <div className="flex mb-6">
+        <label className="w-1/3">
+          画像
+        </label>
+        <div className="w-2/3">
+          <Dropzone />
+        </div>
+      </div>
 
-      <input type="submit" />
+      <div className="flex mb-6">
+        <label className="w-1/3">
+          画像
+        </label>
+        <div className="w-2/3">
+          <input
+            type="file"
+            accept="image/*"
+            {...register("images", {
+              required: "必須です。",
+            })}
+            multiple
+          />
+          {errors.images && (
+            <p className=" text-red-400 text-left">{errors.images.message}</p>
+          )}
+        </div>
+      </div>
+
+      <div className="flex mb-6">
+        <label className="w-1/3" htmlFor="title">
+          タイトル
+        </label>
+        <div className="w-2/3">
+          <input
+            id="title"
+            className="bg-gray-200 w-full p-1"
+            {...register("title", {
+              required: "必須です。",
+              maxLength: {
+                value: MAX_TITLE_LENGTH,
+                message: `${MAX_TITLE_LENGTH}文字以内で入力してください。`,
+              },
+            })}
+          />
+          {errors.title && (
+            <p className=" text-red-400 text-left">{errors.title.message}</p>
+          )}
+        </div>
+      </div>
+      <div className="flex mb-6">
+        <label className="w-1/3" htmlFor="description">
+          説明
+        </label>
+        <div className="w-2/3">
+          <textarea
+            id="description"
+            className="bg-gray-200 w-full p-1"
+            {...register("description", {
+              required: "必須です。",
+              maxLength: {
+                value: MAX_DESCRIPTION_LENGTH,
+                message: `${MAX_DESCRIPTION_LENGTH}文字以内で入力してください。`,
+              },
+            })}
+          />
+          {errors.description && (
+            <p className=" text-red-400 text-left">
+              {errors.description.message}
+            </p>
+          )}
+        </div>
+      </div>
+
+      <div className="text-center">
+        <input
+          className="text-white bg-gray-600 p-1 font-bold cursor-pointer"
+          type="submit"
+        />
+      </div>
     </form>
   );
 };

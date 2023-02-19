@@ -6,7 +6,7 @@ function App() {
   createFirebaseClientApp();
 
   return (
-    <div className="App">
+    <div className="flex justify-center pt-12">
       <PostForm />
     </div>
   );
