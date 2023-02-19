@@ -1,4 +1,4 @@
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { Dropzone } from "./Dropzone";
 import { useState } from "react";
@@ -8,11 +8,40 @@ import { Post } from "../models/post";
 
 export const PostForm = () => {
   const [images, setImages] = useState<File[]>([]);
-  const { register, handleSubmit, formState: { errors } } = useForm<
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+    setValue,
+    clearErrors,
+  } = useForm<
     Post
   >({
+    defaultValues: {
+      images,
+    },
     resolver: zodResolver(Post),
   });
+
+  const handleImages = (images: File[]) => {
+    if (images.length === 0) return;
+
+    setImages((prevImages) => {
+      return prevImages.concat(images);
+    });
+    setValue("images", images);
+    clearErrors("images");
+  };
+
+  const unselectImage = (at: number) => {
+    setImages((prevImages) => {
+      const newImages = prevImages.filter((_, index) => index !== at);
+      setValue("images", newImages);
+
+      return newImages;
+    });
+  };
 
   const onSubmit: SubmitHandler<Post> = (data) => {
     console.log(data);
@@ -36,7 +65,23 @@ export const PostForm = () => {
           画像
         </label>
         <div className="w-2/3">
-          <Dropzone images={images} setImages={setImages} />
+          <Controller
+            name="images"
+            control={control}
+            render={({ field }) => (
+              <Dropzone
+                images={images}
+                setImages={handleImages}
+                unselectImage={unselectImage}
+                {...field}
+              />
+            )}
+          />
+          {errors.images && (
+            <p className=" text-red-400 text-left">
+              {errors.images.message?.toString()}
+            </p>
+          )}
         </div>
       </div>
 
