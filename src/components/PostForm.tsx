@@ -1,5 +1,6 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { Dropzone } from "./Dropzone";
 
 type PostInput = {
   title: string;
@@ -30,6 +31,7 @@ export const PostForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <Dropzone />
       <label style={{ display: "block" }}>
         画像
         <input
