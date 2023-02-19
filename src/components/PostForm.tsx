@@ -1,6 +1,8 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { Dropzone } from "./Dropzone";
+import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 type PostInput = {
   title: string;
@@ -12,16 +14,16 @@ const MAX_TITLE_LENGTH = 30;
 const MAX_DESCRIPTION_LENGTH = 100;
 
 export const PostForm = () => {
+  const [images, setImages] = useState<File[]>([]);
   const { register, handleSubmit, formState: { errors } } = useForm<
     PostInput
   >();
+
   const onSubmit: SubmitHandler<PostInput> = (data) => {
     console.log(data);
-
-    const images = Array.from(data.images);
     images.forEach((image) => {
       const storage = getStorage();
-      const imageRef = ref(storage, image.name);
+      const imageRef = ref(storage, uuidv4());
 
       uploadBytes(imageRef, image).then(() =>
         console.log(`Uploaded: ${image.name}`)
@@ -39,26 +41,7 @@ export const PostForm = () => {
           画像
         </label>
         <div className="w-2/3">
-          <Dropzone />
-        </div>
-      </div>
-
-      <div className="flex mb-6">
-        <label className="w-1/3">
-          画像
-        </label>
-        <div className="w-2/3">
-          <input
-            type="file"
-            accept="image/*"
-            {...register("images", {
-              required: "必須です。",
-            })}
-            multiple
-          />
-          {errors.images && (
-            <p className=" text-red-400 text-left">{errors.images.message}</p>
-          )}
+          <Dropzone images={images} setImages={setImages} />
         </div>
       </div>
 
