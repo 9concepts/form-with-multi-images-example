@@ -3,23 +3,18 @@ import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { Dropzone } from "./Dropzone";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-
-type PostInput = {
-  title: string;
-  description: string;
-  images: FileList;
-};
-
-const MAX_TITLE_LENGTH = 30;
-const MAX_DESCRIPTION_LENGTH = 100;
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Post } from "../models/post";
 
 export const PostForm = () => {
   const [images, setImages] = useState<File[]>([]);
   const { register, handleSubmit, formState: { errors } } = useForm<
-    PostInput
-  >();
+    Post
+  >({
+    resolver: zodResolver(Post),
+  });
 
-  const onSubmit: SubmitHandler<PostInput> = (data) => {
+  const onSubmit: SubmitHandler<Post> = (data) => {
     console.log(data);
     images.forEach((image) => {
       const storage = getStorage();
@@ -53,13 +48,7 @@ export const PostForm = () => {
           <input
             id="title"
             className="bg-gray-200 w-full p-1"
-            {...register("title", {
-              required: "必須です。",
-              maxLength: {
-                value: MAX_TITLE_LENGTH,
-                message: `${MAX_TITLE_LENGTH}文字以内で入力してください。`,
-              },
-            })}
+            {...register("title")}
           />
           {errors.title && (
             <p className=" text-red-400 text-left">{errors.title.message}</p>
@@ -74,13 +63,7 @@ export const PostForm = () => {
           <textarea
             id="description"
             className="bg-gray-200 w-full p-1"
-            {...register("description", {
-              required: "必須です。",
-              maxLength: {
-                value: MAX_DESCRIPTION_LENGTH,
-                message: `${MAX_DESCRIPTION_LENGTH}文字以内で入力してください。`,
-              },
-            })}
+            {...register("description")}
           />
           {errors.description && (
             <p className=" text-red-400 text-left">
