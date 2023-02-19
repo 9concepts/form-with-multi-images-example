@@ -1,8 +1,10 @@
 import { SubmitHandler, useForm } from "react-hook-form";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 
 type PostInput = {
   title: string;
   description: string;
+  images: FileList;
 };
 
 const MAX_TITLE_LENGTH = 30;
@@ -14,10 +16,34 @@ export const PostForm = () => {
   >();
   const onSubmit: SubmitHandler<PostInput> = (data) => {
     console.log(data);
+
+    const images = Array.from(data.images);
+    images.forEach((image) => {
+      const storage = getStorage();
+      const imageRef = ref(storage, image.name);
+
+      uploadBytes(imageRef, image).then(() =>
+        console.log(`Uploaded: ${image.name}`)
+      );
+    });
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <label style={{ display: "block" }}>
+        画像
+        <input
+          type="file"
+          accept="image/*"
+          {...register("images", {
+            required: "必須です。",
+          })}
+          multiple
+        />
+        {errors.images && (
+          <p style={{ color: "tomato" }}>{errors.images.message}</p>
+        )}
+      </label>
       <label style={{ display: "block" }}>
         タイトル
         <input
