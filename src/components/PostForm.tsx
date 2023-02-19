@@ -6,7 +6,11 @@ import { v4 as uuidv4 } from "uuid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Post } from "../models/post";
 
+let renderingCount = 0;
+
 export const PostForm = () => {
+  renderingCount++;
+
   const [images, setImages] = useState<File[]>([]);
   const {
     register,
@@ -60,6 +64,7 @@ export const PostForm = () => {
       className="w-full max-w-lg p-4 border-gray-900 border rounded"
       onSubmit={handleSubmit(onSubmit)}
     >
+      <div className=" absolute right-10">Rendring count: {renderingCount}</div>
       <div className="flex mb-6">
         <label className="w-1/3">
           画像
